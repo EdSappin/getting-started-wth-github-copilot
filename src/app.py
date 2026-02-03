@@ -21,7 +21,50 @@ app.mount("/static", StaticFiles(directory=os.path.join(Path(__file__).parent,
 
 # In-memory activity database
 activities = {
+    "Basketball": {
+        "leader": "Ms. Rivera",
+        "description": "Team basketball practice and games",
+        "schedule": "Mondays and Wednesdays, 4:00 PM - 5:30 PM",
+        "max_participants": 15,
+        "participants": ["james@mergington.edu"]
+},
+"Tennis": {
+    "leader": "Coach Smith",
+    "description": "Tennis skills development and friendly matches",
+    "schedule": "Tuesdays and Thursdays, 4:00 PM - 5:00 PM",
+    "max_participants": 10,
+    "participants": ["alex@mergington.edu"]
+},
+"Debate Club": {
+    "leader": "Dr. Patterson",
+    "description": "Develop public speaking and critical thinking skills",
+    "schedule": "Wednesdays, 3:30 PM - 5:00 PM",
+    "max_participants": 18,
+    "participants": ["lucas@mergington.edu", "isabella@mergington.edu"]
+},
+"Science Olympiad": {
+    "leader": "Mr. Chen",
+    "description": "Compete in science competitions and experiments",
+    "schedule": "Saturdays, 10:00 AM - 12:00 PM",
+    "max_participants": 25,
+    "participants": ["rachel@mergington.edu"]
+},
+"Drama Club": {
+    "leader": "Ms. Thompson",
+    "description": "Theater performances and acting workshops",
+    "schedule": "Thursdays, 4:00 PM - 5:30 PM",
+    "max_participants": 20,
+    "participants": ["ava@mergington.edu", "noah@mergington.edu"]
+},
+"Art Studio": {
+    "leader": "Mr. Garcia",
+    "description": "Painting, drawing, and sculpture techniques",
+    "schedule": "Mondays and Fridays, 3:30 PM - 5:00 PM",
+    "max_participants": 16,
+    "participants": ["mia@mergington.edu"]
+},
     "Chess Club": {
+        "leader": "Mr. Johnson",
         "description": "Learn strategies and compete in chess tournaments",
         "schedule": "Fridays, 3:30 PM - 5:00 PM",
         "max_participants": 12,
@@ -61,7 +104,20 @@ def signup_for_activity(activity_name: str, email: str):
 
     # Get the specific activity
     activity = activities[activity_name]
-
+# Validate student is not already signed up  
+    if email in activity["participants"]:
+        raise HTTPException(status_code=400, detail=f"Student {email} is already signed up for {activity_name}")
     # Add student
     activity["participants"].append(email)
     return {"message": f"Signed up {email} for {activity_name}"}
+
+@app.post("/activities/{activity_name}/unregister")
+def unregister_from_activity(activity_name: str, email: str):
+    """Remove a student from an activity"""
+    if activity_name not in activities:
+        raise HTTPException(status_code=404, detail="Activity not found")
+    activity = activities[activity_name]
+    if email not in activity["participants"]:
+        raise HTTPException(status_code=400, detail=f"Student {email} is not registered for {activity_name}")
+    activity["participants"].remove(email)
+    return {"message": f"Removed {email} from {activity_name}"}
