@@ -20,12 +20,13 @@ app.mount("/static", StaticFiles(directory=os.path.join(Path(__file__).parent,
           "static")), name="static")
 
 # In-memory activity database
-"Basketball": {
-    "leader": "Ms. Rivera",
-    "description": "Team basketball practice and games",
-    "schedule": "Mondays and Wednesdays, 4:00 PM - 5:30 PM",
-    "max_participants": 15,
-    "participants": ["james@mergington.edu"]
+activities = {
+    "Basketball": {
+        "leader": "Ms. Rivera",
+        "description": "Team basketball practice and games",
+        "schedule": "Mondays and Wednesdays, 4:00 PM - 5:30 PM",
+        "max_participants": 15,
+        "participants": ["james@mergington.edu"]
 },
 "Tennis": {
     "leader": "Coach Smith",
@@ -62,7 +63,6 @@ app.mount("/static", StaticFiles(directory=os.path.join(Path(__file__).parent,
     "max_participants": 16,
     "participants": ["mia@mergington.edu"]
 },
-activities = {
     "Chess Club": {
         "leader": "Mr. Johnson",
         "description": "Learn strategies and compete in chess tournaments",
